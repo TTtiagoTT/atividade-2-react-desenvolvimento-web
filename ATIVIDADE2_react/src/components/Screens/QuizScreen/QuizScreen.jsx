@@ -4,17 +4,18 @@ import QuestionBlock from './QuestionBlock';
 import OptionsBlock from './OptionsBlock';
 import StatsDisplay from './StatsDisplay';
 import FeedbackDisplay from './FeedbackDisplay';
-import { isCursorOverElement } from '../../../App';
+// Certifique-se de que esta função está acessível
+import { isCursorOverElement } from '../../../App'; // Ou de onde quer que a importe
 
 function QuizScreen({
     question,
     onAnswerSelect,
     onNextQuestion,
-    onExitGame,
+    onExitGame, // Esta prop já é passada pelo App.jsx
     score,
     errors,
     timeLeft,
-    setTimeLeft, // Recebe a função para atualizar o tempo
+    setTimeLeft,
     handDetected,
     cursorPosition,
     timeDelay,
@@ -26,82 +27,111 @@ function QuizScreen({
     totalQuestions
 }) {
     const nextButtonRef = useRef(null);
-    const exitButtonRef = useRef(null); // Ref para o botão de sair desta tela, se diferente do global
+    const exitButtonRef = useRef(null); // Ref para o botão de sair
 
     const [isHoveringNext, setIsHoveringNext] = useState(false);
-    const [isHoveringExit, setIsHoveringExit] = useState(false);
+    const [isHoveringExit, setIsHoveringExit] = useState(false); // Estado para hover no botão Sair
     const nextActionTimeoutRef = useRef(null);
-    const exitActionTimeoutRef = useRef(null);
+    const exitActionTimeoutRef = useRef(null); // Timer para ação do botão Sair
 
-    // Cronômetro da pergunta
+    // Cronômetro da pergunta (sem alterações)
     useEffect(() => {
         if (timeLeft === 0) {
-            onTimeUp(); // Avisa o App que o tempo acabou
+            onTimeUp();
             return;
         }
-        if (isFeedbackVisible) return; // Pausa o cronômetro se o feedback estiver visível
+        if (isFeedbackVisible) return;
 
         const timerId = setInterval(() => {
             setTimeLeft(prevTime => prevTime - 1);
         }, 1000);
-
         return () => clearInterval(timerId);
     }, [timeLeft, setTimeLeft, onTimeUp, isFeedbackVisible]);
 
-
-    // Lógica de hover para o botão "Próxima" (que só aparece com o feedback)
-    // Efeito 1 para o botão "Próxima": Atualiza o estado isHoveringNext
+    // Lógica de hover e ação para o botão "Próxima" (sem alterações)
     useEffect(() => {
-        // Só faz sentido detectar hover se o feedback (e o botão "Próxima") estiver visível,
-        // se houver posição do cursor e se a ref do botão estiver pronta.
         if (!isFeedbackVisible || !cursorPosition || !nextButtonRef.current) {
-            if (isHoveringNext) setIsHoveringNext(false); // Garante que o hover seja desativado
+            if (isHoveringNext) setIsHoveringNext(false);
             return;
         }
-
-        const overNext = isCursorOverElement(cursorPosition, nextButtonRef.current);
-
-        // Atualiza o estado de hover SOMENTE se ele realmente mudou
+        const overNext = isCursorOverElement(cursorPosition, nextButtonRef.current, 20); // Margem
         if (overNext !== isHoveringNext) {
             setIsHoveringNext(overNext);
         }
-    }, [cursorPosition, isFeedbackVisible, nextButtonRef, isHoveringNext]); // Adicionado nextButtonRef aqui
+    }, [cursorPosition, isFeedbackVisible, nextButtonRef, isHoveringNext]);
 
-    // Efeito 2 para o botão "Próxima": Gerencia o timer e a ação de clique
     useEffect(() => {
-        // Só inicia o timer se o feedback estiver visível E estiver em hover sobre o botão "Próxima"
         if (isFeedbackVisible && isHoveringNext) {
-            console.log(`QuizScreen: Hover sobre "Próxima". Iniciando timer de ${timeDelay}ms.`);
+            console.log(`QuizScreen: Hover sobre "Próxima". Iniciando timer.`);
+            if (nextActionTimeoutRef.current) clearTimeout(nextActionTimeoutRef.current);
             nextActionTimeoutRef.current = setTimeout(() => {
-                // Verifica novamente as condições antes de disparar a ação
-                // (o estado poderia ter mudado enquanto o timer estava rodando)
                 if (isFeedbackVisible && isHoveringNext) {
-                    console.log(`QuizScreen: Timer para "Próxima" concluído. Chamando onNextQuestion.`);
-                    onNextQuestion(); // Chama a função para ir para a próxima pergunta
-                    // setIsHoveringNext(false); // O primeiro useEffect cuidará de resetar o hover
-                    // se o cursor sair ou isFeedbackVisible mudar.
+                    console.log(`QuizScreen: Timer para "Próxima" concluído.`);
+                    onNextQuestion();
                     nextActionTimeoutRef.current = null;
                 }
             }, timeDelay);
-        }
-
-        // Função de limpeza para este useEffect
-        return () => {
+        } else {
             if (nextActionTimeoutRef.current) {
-                console.log(`QuizScreen: Limpando timer do botão "Próxima".`);
                 clearTimeout(nextActionTimeoutRef.current);
                 nextActionTimeoutRef.current = null;
             }
+        }
+        return () => {
+            if (nextActionTimeoutRef.current) clearTimeout(nextActionTimeoutRef.current);
         };
-    }, [isHoveringNext, isFeedbackVisible, timeDelay, onNextQuestion]); // Dependências para a lógica do timer/ação
+    }, [isHoveringNext, isFeedbackVisible, timeDelay, onNextQuestion]);
 
 
-    // Lógica de hover para o botão "Sair" (se for específico desta tela)
-    // Se você estiver usando o botão Sair global do App.jsx, esta lógica pode não ser necessária aqui
-    // ou seria para um botão de sair diferente.
-    // useEffect(() => {
-    //    // ... lógica similar para o botão de sair se ele for controlado por gesto aqui ...
-    // }, [cursorPosition, timeDelay, onExitGame, isHoveringExit]);
+    // --- LÓGICA PARA O BOTÃO "SAIR" ---
+    // Efeito 1 para o botão "Sair": Atualiza o estado isHoveringExit
+    useEffect(() => {
+        // Só deteta hover se houver cursor e a ref do botão estiver pronta.
+        // O botão Sair está sempre visível durante o Quiz (não depende de isFeedbackVisible).
+        if (!cursorPosition || !exitButtonRef.current) {
+            if (isHoveringExit) setIsHoveringExit(false);
+            return;
+        }
+
+        const overExit = isCursorOverElement(cursorPosition, exitButtonRef.current, 20); // Margem
+
+        if (overExit !== isHoveringExit) {
+            console.log(`QuizScreen: Cursor ${overExit ? 'ENTROU' : 'SAIU'} da área do botão Sair.`);
+            setIsHoveringExit(overExit);
+        }
+    }, [cursorPosition, exitButtonRef, isHoveringExit]); // Adicionado exitButtonRef
+
+    // Efeito 2 para o botão "Sair": Gerencia o timer e a ação de clique
+    useEffect(() => {
+        if (isHoveringExit) {
+            console.log(`QuizScreen: Hover ATIVADO no botão Sair. A iniciar timer de ${timeDelay}ms.`);
+            if (exitActionTimeoutRef.current) clearTimeout(exitActionTimeoutRef.current);
+            exitActionTimeoutRef.current = setTimeout(() => {
+                // Verifica novamente se ainda está em hover antes de disparar
+                if (isHoveringExit) {
+                    console.log("QuizScreen: Timer CONCLUÍDO para Sair! A chamar onExitGame.");
+                    onExitGame(); // Chama a função passada pelo App.jsx
+                    setIsHoveringExit(false); // Desativa o hover após a ação
+                    exitActionTimeoutRef.current = null;
+                }
+            }, timeDelay);
+        } else {
+            // Se não está em hover, garante que qualquer timer pendente seja limpo
+            if (exitActionTimeoutRef.current) {
+                console.log("QuizScreen: Hover DESATIVADO no botão Sair. A limpar timer existente.");
+                clearTimeout(exitActionTimeoutRef.current);
+                exitActionTimeoutRef.current = null;
+            }
+        }
+
+        return () => {
+            if (exitActionTimeoutRef.current) {
+                clearTimeout(exitActionTimeoutRef.current);
+                exitActionTimeoutRef.current = null;
+            }
+        };
+    }, [isHoveringExit, timeDelay, onExitGame]);
+    // --- FIM DA LÓGICA PARA O BOTÃO "SAIR" ---
 
 
     if (!question) {
@@ -109,7 +139,7 @@ function QuizScreen({
     }
 
     return (
-        <div id="quiz-container" style={{ display: 'block' }}> {/* Seu CSS controlará o layout */}
+        <div id="quiz-container" style={{ display: 'block' }}>
             <div id="header-container">
                 <QuestionBlock text={question.pergunta} />
                 <StatsDisplay
@@ -124,31 +154,46 @@ function QuizScreen({
 
             <OptionsBlock
                 options={question.opcoes}
-                correta={question.correta} // Passa o índice da correta
+                correta={question.correta}
                 onOptionSelect={onAnswerSelect}
                 cursorPosition={cursorPosition}
                 timeDelay={timeDelay}
-                isFeedbackVisible={isFeedbackVisible} // Para desabilitar hover nas opções após resposta
-                difficulty={question.dificuldade} // para a pontuação
+                isFeedbackVisible={isFeedbackVisible}
+                difficulty={question.dificuldade}
             />
 
             {isFeedbackVisible && (
                 <FeedbackDisplay
                     message={feedback.message}
                     type={feedback.type}
-                    onNextButtonRef={nextButtonRef} // Passa a ref para o botão
-                    isHoveringNext={isHoveringNext} // Passa o estado de hover
+                    onNextButtonRef={nextButtonRef}
+                    isHoveringNext={isHoveringNext}
                 />
             )}
 
-            {/* Informações abaixo das opções */}
             <div id="info-abaixo-opcoes">
                 <div id="disciplina-block">{question.disciplina}</div>
                 <div id="dificuldade-block">Nível: {['Fácil', 'Médio', 'Difícil', 'Aleatório'][question.dificuldade] || 'N/A'}</div>
             </div>
 
-            {/* Botão de Sair específico da tela (opcional, se diferente do global) */}
-            {/* <button ref={exitButtonRef} onClick={onExitGame} className={isHoveringExit ? 'hover' : ''}>Sair do Quiz</button> */}
+            {/* Renderiza o botão Sair aqui, dentro do QuizScreen */}
+            <button
+                ref={exitButtonRef}
+                id="btn-exit" // Para usar o seu estilo CSS existente
+                className={isHoveringExit ? 'hover' : ''}
+                // O onClick manual ainda pode ser útil para testes, mas a ação principal é por gesto
+                onClick={() => { console.log("QuizScreen: Botão Sair clicado manualmente."); onExitGame(); }}
+                style={{ 
+                    position: 'absolute', 
+                    bottom: '2vw', 
+                    right: '2vw', 
+                    zIndex: 70 // z-index do seu CSS para btn-exit é 7. Pode ajustar se necessário.
+                               // Deve ser menor que o do feedback (10) ou cursor (9999)
+                               // mas visível.
+                }}
+            >
+                Sair
+            </button>
         </div>
     );
 }

@@ -1,14 +1,14 @@
 // src/App.jsx
-import React, { useState, useEffect, useCallback } from 'react'; // Adicionado useCallback
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import './index.css';
 import HandposeDetector from './components/HandposeDetector/HandposeDetector';
 import StartScreen from './components/Screens/StartScreen';
 import DifficultyScreen from './components/Screens/DifficultyScreen';
-import CountdownScreen from './components/Screens/CountdownScreen'; // Adicionar import
-import QuizScreen from './components/Screens/QuizScreen/QuizScreen'; // Adicionar import
-import ResultsScreen from './components/Screens/ResultsScreen'; // Adicionar import
+import CountdownScreen from './components/Screens/CountdownScreen';
+import QuizScreen from './components/Screens/QuizScreen/QuizScreen';
+import ResultsScreen from './components/Screens/ResultsScreen';
 
-// Funções utilitárias (podem ir para src/utils/helpers.js ou similar depois)
 export function isCursorOverElement(cursorPos, element, margin = 0) {
   if (!cursorPos || !element) return false;
   const rect = element.getBoundingClientRect();
@@ -28,7 +28,6 @@ const GAME_STATES = {
   RESULTS: 'RESULTS',
 };
 
-// Dificuldades (exemplo, você pode buscar isso da API ou definir de outra forma)
 const DIFFICULTIES = [
     { id: 0, label: 'Fácil' },
     { id: 1, label: 'Médio' },
@@ -40,26 +39,27 @@ function App() {
   const [gameState, setGameState] = useState(GAME_STATES.START);
   const [cursorPosition, setCursorPosition] = useState(null);
   const [handDetected, setHandDetected] = useState(false);
-
-  // Estados específicos do Quiz
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [errors, setErrors] = useState(0); // Erros na rodada atual
-  const [timeLeft, setTimeLeft] = useState(15); // Tempo por pergunta
+  const [errors, setErrors] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(15);
   const [selectedDifficulty, setSelectedDifficulty] = useState(null);
-  const [feedback, setFeedback] = useState({ message: '', type: '' }); // type: 'correct', 'incorrect', 'info'
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
 
-  const timeDelayForAction = 1000; // ms
+  const timeDelayForAction = 1000;
 
-  // Callback para o HandposeDetector
-  const handleHandMove = useCallback((pos, detected) => {
+  const handleHandMove = useCallback((pos, detected, errorOccurred) => {
+    if (errorOccurred) {
+        console.error("App.jsx: Erro no HandposeDetector comunicado.");
+        return;
+    }
     setCursorPosition(pos);
     setHandDetected(detected);
   }, []);
 
-  // Funções de transição de estado e lógica de jogo
   const handleStartGame = useCallback(() => {
     setScore(0);
     setErrors(0);
@@ -71,44 +71,84 @@ function App() {
   }, []);
 
   const handleDifficultySelect = useCallback(async (difficulty) => {
+    if (!difficulty || typeof difficulty.id === 'undefined') {
+        console.error("App.jsx: handleDifficultySelect chamada com dificuldade inválida:", difficulty);
+        alert("Ocorreu um erro ao selecionar a dificuldade. Tente novamente.");
+        setIsLoadingQuestions(false);
+        setGameState(GAME_STATES.DIFFICULTY);
+        return;
+    }
+
     setSelectedDifficulty(difficulty);
-    console.log("Dificuldade selecionada:", difficulty);
-    // AQUI VOCÊ CHAMARÁ A API PARA BUSCAR AS PERGUNTAS
-    // Exemplo mockado por enquanto:
-    // const fetchedQuestions = await fetchQuestionsFromAPI(difficulty.id);
-    // setQuestions(fetchedQuestions);
-    // if (fetchedQuestions.length > 0) {
-    //   setGameState(GAME_STATES.COUNTDOWN);
-    // } else {
-    //   alert("Nenhuma pergunta encontrada para esta dificuldade!");
-    //   setGameState(GAME_STATES.DIFFICULTY); // Volta para seleção
-    // }
-    setQuestions([ // Mock de perguntas para teste
-        { id: 1, pergunta: "Qual a cor do céu?", opcoes: ["Azul", "Verde", "Vermelho", "Amarelo"], correta: 0, disciplina: "Ciências", dificuldade: 0 },
-        { id: 2, pergunta: "Quanto é 2+2?", opcoes: ["3", "4", "5", "6"], correta: 1, disciplina: "Matemática", dificuldade: 0 },
-    ]);
-    setGameState(GAME_STATES.COUNTDOWN);
-  }, []);
+    setIsLoadingQuestions(true);
+    console.log(`App.jsx: Dificuldade selecionada - Label: ${difficulty.label}, ID: ${difficulty.id}. A carregar perguntas...`);
+
+    try {
+      const apiUrl = `http://localhost:8000/api/questions/${difficulty.id}`;
+      console.log(`App.jsx: A fazer chamada API para: ${apiUrl}`);
+      const response = await axios.get(apiUrl);
+      const fetchedQuestions = response.data;
+      
+      console.log("App.jsx: Resposta da API recebida:", response);
+      console.log("App.jsx: Perguntas recebidas (response.data):", fetchedQuestions);
+
+      if (fetchedQuestions && fetchedQuestions.length > 0) {
+        console.log(`App.jsx: ${fetchedQuestions.length} perguntas recebidas. A definir estado do jogo para COUNTDOWN.`);
+        setQuestions(fetchedQuestions);
+        setGameState(GAME_STATES.COUNTDOWN);
+      } else {
+        console.warn(`App.jsx: Nenhuma pergunta encontrada para dificuldade ID ${difficulty.id} (${difficulty.label}).`);
+        alert(`Nenhuma pergunta encontrada para a dificuldade: ${difficulty.label}. Verifique o ficheiro questions.json ou tente outra dificuldade.`);
+        setQuestions([]);
+        setGameState(GAME_STATES.DIFFICULTY);
+      }
+    } catch (error) {
+      console.error("App.jsx: Erro ao buscar perguntas da API:", error);
+      if (error.response) {
+        // O pedido foi feito e o servidor respondeu com um código de estado
+        // que cai fora do intervalo de 2xx
+        console.error("App.jsx: Dados do erro da API:", error.response.data);
+        console.error("App.jsx: Estado do erro da API:", error.response.status);
+        console.error("App.jsx: Cabeçalhos do erro da API:", error.response.headers);
+      } else if (error.request) {
+        // O pedido foi feito mas nenhuma resposta foi recebida
+        console.error("App.jsx: Nenhum pedido de resposta da API recebido:", error.request);
+        alert("Falha ao comunicar com a API. O servidor está offline ou inacessível?");
+      } else {
+        // Algo aconteceu na configuração do pedido que acionou um Erro
+        console.error('App.jsx: Erro na configuração do pedido da API:', error.message);
+      }
+      alert("Falha ao carregar perguntas. Verifique a consola para detalhes e se a API está a funcionar corretamente.");
+      setGameState(GAME_STATES.DIFFICULTY);
+    } finally {
+      console.log("App.jsx: Finalizando handleDifficultySelect. isLoadingQuestions será false.");
+      setIsLoadingQuestions(false);
+    }
+  }, []); // Adicionar setters de estado aqui se o linter o exigir (ex: [setGameState, setIsLoadingQuestions, setQuestions, setSelectedDifficulty])
 
   const handleCountdownEnd = useCallback(() => {
-    setCurrentQuestionIndex(0); // Garante que começa da primeira pergunta
-    setTimeLeft(15); // Reseta o tempo para a primeira pergunta
+    console.log("App.jsx: Contagem regressiva terminada. A mudar para estado QUIZ.");
+    setCurrentQuestionIndex(0);
+    setTimeLeft(15);
     setGameState(GAME_STATES.QUIZ);
-  }, []);
+  }, []); // Adicionar setGameState, setCurrentQuestionIndex, setTimeLeft se necessário
+
+  // ... (resto das funções handle... e renderCurrentScreen e return JSX permanecem os mesmos)
+  // Certifique-se de que o resto do App.jsx (que não mostrei aqui para brevidade) está correto
+  // e corresponde à versão anterior no Canvas.
 
   const handleAnswerSelected = useCallback((selectedIndex) => {
     const currentQuestion = questions[currentQuestionIndex];
     if (!currentQuestion) return;
 
     if (selectedIndex === currentQuestion.correta) {
-      setScore(prevScore => prevScore + (currentQuestion.dificuldade + 1)); // Pontuação baseada na dificuldade
+      setScore(prevScore => prevScore + (currentQuestion.dificuldade + 1 || 1));
       setFeedback({ message: '✅ Correto!', type: 'correct' });
     } else {
       setErrors(prevErrors => prevErrors + 1);
       setFeedback({ message: `❌ Errado! Resposta: ${currentQuestion.opcoes[currentQuestion.correta]}`, type: 'incorrect' });
     }
     setIsFeedbackVisible(true);
-    // Lógica para ir para a próxima pergunta ou finalizar o quiz será acionada pelo botão "Próxima" ou tempo/erros
   }, [questions, currentQuestionIndex]);
 
   const handleNextQuestion = useCallback(() => {
@@ -119,33 +159,36 @@ function App() {
     }
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-      setTimeLeft(15); // Reseta o tempo para a nova pergunta
+      setTimeLeft(15);
     } else {
-      setGameState(GAME_STATES.RESULTS); // Fim do quiz
+      setGameState(GAME_STATES.RESULTS);
     }
   }, [currentQuestionIndex, questions.length, errors]);
 
   const handleTimeUp = useCallback(() => {
-    if (gameState !== GAME_STATES.QUIZ) return; //Só age se estiver no quiz
+    if (gameState !== GAME_STATES.QUIZ) return;
     setErrors(prevErrors => prevErrors + 1);
     const currentQuestion = questions[currentQuestionIndex];
-    setFeedback({ message: `⏰ Tempo esgotado! Resposta: ${currentQuestion.opcoes[currentQuestion.correta]}`, type: 'info' });
+    const correctAnswerText = currentQuestion && currentQuestion.opcoes && currentQuestion.opcoes[currentQuestion.correta]
+        ? currentQuestion.opcoes[currentQuestion.correta]
+        : "N/A";
+    setFeedback({ message: `⏰ Tempo esgotado! Resposta: ${correctAnswerText}`, type: 'info' });
     setIsFeedbackVisible(true);
-    // A lógica para avançar virá do botão "Próxima" que aparecerá com o feedback
   }, [questions, currentQuestionIndex, gameState]);
 
-
   const handleExitGame = useCallback(() => {
-    // Se estiver no quiz ou resultados, pode voltar para a tela inicial ou de dificuldade
-    setGameState(GAME_STATES.RESULTS); // Simplificado: sempre mostra resultados ao sair
+    setGameState(GAME_STATES.RESULTS);
   }, []);
 
   const handleRestartGame = useCallback(() => {
-    handleStartGame(); // Reutiliza a lógica de iniciar o jogo
+    handleStartGame();
   }, [handleStartGame]);
 
-
   const renderCurrentScreen = () => {
+    if (isLoadingQuestions) {
+        return <div style={{ fontSize: '2em', color: 'white', textAlign: 'center', paddingTop: '20%' }}>Carregando perguntas...</div>;
+    }
+
     switch (gameState) {
       case GAME_STATES.START:
         return <StartScreen onStartGame={handleStartGame} cursorPosition={cursorPosition} timeDelay={timeDelayForAction} />;
@@ -155,10 +198,9 @@ function App() {
         return <CountdownScreen onCountdownEnd={handleCountdownEnd} />;
       case GAME_STATES.QUIZ:
         if (questions.length === 0 || currentQuestionIndex >= questions.length) {
-            // Algum estado inválido, talvez voltar para dificuldade ou mostrar erro
-            // Por segurança, voltamos para a dificuldade se não houver perguntas
-            setGameState(GAME_STATES.DIFFICULTY);
-            return <p>Carregando perguntas ou erro...</p>;
+            console.warn("App.jsx: Tentativa de renderizar QuizScreen sem perguntas válidas. Voltando para DIFICULDADE.");
+            setGameState(GAME_STATES.DIFFICULTY); 
+            return <p style={{color: "white", textAlign: "center", fontSize: "1.5em"}}>Nenhuma pergunta carregada. Por favor, selecione uma dificuldade.</p>;
         }
         return (
             <QuizScreen
@@ -169,7 +211,7 @@ function App() {
                 score={score}
                 errors={errors}
                 timeLeft={timeLeft}
-                setTimeLeft={setTimeLeft} // Para o QuizScreen controlar seu próprio timer
+                setTimeLeft={setTimeLeft}
                 handDetected={handDetected}
                 cursorPosition={cursorPosition}
                 timeDelay={timeDelayForAction}
@@ -211,15 +253,14 @@ function App() {
             pointerEvents: 'none',
             transform: 'translate(-50%, -50%)',
             zIndex: 9999,
-            transition: 'transform 0.1s ease-out' // Pequena transição para suavizar
+            transition: 'transform 0.1s ease-out'
           }}
         />
       )}
-       {/* Botão de Sair Global (exemplo, pode ser específico da tela) */}
        {(gameState === GAME_STATES.QUIZ ) && (
         <button
-          id="btn-exit" // Use o estilo CSS existente
-          onClick={handleExitGame} // Para clique manual, a lógica de gesto seria no QuizScreen
+          id="btn-exit"
+          onClick={handleExitGame}
           style={{ position: 'absolute', bottom: '2vw', right: '2vw', zIndex: 100 }}
         >
           Sair
