@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import './index.css';
+import './index.css'; // Certifique-se que o seu CSS principal está aqui
 import HandposeDetector from './components/HandposeDetector/HandposeDetector';
 import StartScreen from './components/Screens/StartScreen';
 import DifficultyScreen from './components/Screens/DifficultyScreen';
@@ -9,6 +9,8 @@ import CountdownScreen from './components/Screens/CountdownScreen';
 import QuizScreen from './components/Screens/QuizScreen/QuizScreen';
 import ResultsScreen from './components/Screens/ResultsScreen';
 
+// Função utilitária para verificar se o cursor está sobre um elemento
+// Considere mover para um ficheiro utils/helpers.js se usar em muitos locais
 export function isCursorOverElement(cursorPos, element, margin = 0) {
   if (!cursorPos || !element) return false;
   const rect = element.getBoundingClientRect();
@@ -16,7 +18,7 @@ export function isCursorOverElement(cursorPos, element, margin = 0) {
     cursorPos.x >= rect.left - margin &&
     cursorPos.x <= rect.right + margin &&
     cursorPos.y >= rect.top - margin &&
-    cursorPos.y <= rect.bottom + margin
+    cursorPos.y <= rect.bottom + margin // CORRIGIDO: de marginx para margin
   );
 }
 
@@ -29,10 +31,10 @@ const GAME_STATES = {
 };
 
 const DIFFICULTIES = [
-  { id: 0, label: 'Fácil' },
-  { id: 1, label: 'Médio' },
-  { id: 2, label: 'Difícil' },
-  { id: 3, label: 'Aleatório' },
+    { id: 0, label: 'Fácil' },
+    { id: 1, label: 'Médio' },
+    { id: 2, label: 'Difícil' },
+    { id: 3, label: 'Aleatório' }, // A sua API precisa de lidar com este ID
 ];
 
 function App() {
@@ -49,11 +51,12 @@ function App() {
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
 
-  const timeDelayForAction = 1000;
+  const timeDelayForAction = 1000; // Tempo em ms para "clique" por gesto
 
   const handleHandMove = useCallback((pos, detected, errorOccurred) => {
     if (errorOccurred) {
         console.error("App.jsx: Erro no HandposeDetector comunicado.");
+        // Poderia definir um estado de erro aqui para mostrar na UI, se desejado
         return;
     }
     setCursorPosition(pos);
@@ -61,6 +64,7 @@ function App() {
   }, []);
 
   const handleStartGame = useCallback(() => {
+    console.log("App.jsx: Iniciando Jogo. Resetando estados.");
     setScore(0);
     setErrors(0);
     setCurrentQuestionIndex(0);
@@ -68,14 +72,13 @@ function App() {
     setSelectedDifficulty(null);
     setIsFeedbackVisible(false);
     setGameState(GAME_STATES.DIFFICULTY);
-  }, []);
-
+  }, []); // Adicione setters de estado como dependências se o linter avisar
 
   const handleDifficultySelect = useCallback(async (difficulty) => {
     if (!difficulty || typeof difficulty.id === 'undefined') {
         console.error("App.jsx: handleDifficultySelect chamada com dificuldade inválida:", difficulty);
         alert("Ocorreu um erro ao selecionar a dificuldade. Tente novamente.");
-        setIsLoadingQuestions(false);
+        setIsLoadingQuestions(false); // Garante que o loading é resetado
         setGameState(GAME_STATES.DIFFICULTY);
         return;
     }
@@ -90,7 +93,7 @@ function App() {
       const response = await axios.get(apiUrl);
       const fetchedQuestions = response.data;
       
-      console.log("App.jsx: Resposta da API recebida:", response);
+      console.log("App.jsx: Resposta da API recebida. Status:", response.status);
       console.log("App.jsx: Perguntas recebidas (response.data):", fetchedQuestions);
 
       if (fetchedQuestions && fetchedQuestions.length > 0) {
@@ -99,24 +102,19 @@ function App() {
         setGameState(GAME_STATES.COUNTDOWN);
       } else {
         console.warn(`App.jsx: Nenhuma pergunta encontrada para dificuldade ID ${difficulty.id} (${difficulty.label}).`);
-        alert(`Nenhuma pergunta encontrada para a dificuldade: ${difficulty.label}. Verifique o ficheiro questions.json ou tente outra dificuldade.`);
+        alert(`Nenhuma pergunta encontrada para a dificuldade: ${difficulty.label}. Verifique o ficheiro questions.json na sua API ou tente outra dificuldade.`);
         setQuestions([]);
-        setGameState(GAME_STATES.DIFFICULTY);
+        setGameState(GAME_STATES.DIFFICULTY); // Permanece na tela de dificuldade
       }
     } catch (error) {
       console.error("App.jsx: Erro ao buscar perguntas da API:", error);
       if (error.response) {
-        // O pedido foi feito e o servidor respondeu com um código de estado
-        // que cai fora do intervalo de 2xx
         console.error("App.jsx: Dados do erro da API:", error.response.data);
         console.error("App.jsx: Estado do erro da API:", error.response.status);
-        console.error("App.jsx: Cabeçalhos do erro da API:", error.response.headers);
       } else if (error.request) {
-        // O pedido foi feito mas nenhuma resposta foi recebida
-        console.error("App.jsx: Nenhum pedido de resposta da API recebido:", error.request);
-        alert("Falha ao comunicar com a API. O servidor está offline ou inacessível?");
+        console.error("App.jsx: Nenhum pedido de resposta da API recebido (API offline ou CORS?):", error.request);
+        alert("Falha ao comunicar com a API. O servidor está offline, inacessível ou há um problema de CORS?");
       } else {
-        // Algo aconteceu na configuração do pedido que acionou um Erro
         console.error('App.jsx: Erro na configuração do pedido da API:', error.message);
       }
       alert("Falha ao carregar perguntas. Verifique a consola para detalhes e se a API está a funcionar corretamente.");
@@ -125,64 +123,70 @@ function App() {
       console.log("App.jsx: Finalizando handleDifficultySelect. isLoadingQuestions será false.");
       setIsLoadingQuestions(false);
     }
-  }, []); // Adicionar setters de estado aqui se o linter o exigir (ex: [setGameState, setIsLoadingQuestions, setQuestions, setSelectedDifficulty])
+  }, []); // Adicione setters de estado aqui se o linter o exigir
 
   const handleCountdownEnd = useCallback(() => {
     console.log("App.jsx: Contagem regressiva terminada. A mudar para estado QUIZ.");
     setCurrentQuestionIndex(0);
     setTimeLeft(15);
     setGameState(GAME_STATES.QUIZ);
-  }, []); // Adicionar setGameState, setCurrentQuestionIndex, setTimeLeft se necessário
-
-  // ... (resto das funções handle... e renderCurrentScreen e return JSX permanecem os mesmos)
-  // Certifique-se de que o resto do App.jsx (que não mostrei aqui para brevidade) está correto
-  // e corresponde à versão anterior no Canvas.
+  }, []); // Adicione setters de estado aqui se o linter o exigir
 
   const handleAnswerSelected = useCallback((selectedIndex) => {
     const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion) return;
+    if (!currentQuestion) {
+        console.warn("App.jsx: handleAnswerSelected chamada sem currentQuestion.");
+        return;
+    }
 
+    console.log(`App.jsx: Opção selecionada índice: ${selectedIndex}, Resposta correta índice: ${currentQuestion.correta}`);
     if (selectedIndex === currentQuestion.correta) {
-      setScore(prevScore => prevScore + (currentQuestion.dificuldade + 1 || 1));
+      setScore(prevScore => prevScore + (currentQuestion.dificuldade + 1 || 1)); // +1 para dificuldade 0 dar 1 ponto
       setFeedback({ message: '✅ Correto!', type: 'correct' });
     } else {
       setErrors(prevErrors => prevErrors + 1);
       setFeedback({ message: `❌ Errado! Resposta: ${currentQuestion.opcoes[currentQuestion.correta]}`, type: 'incorrect' });
     }
     setIsFeedbackVisible(true);
-  }, [questions, currentQuestionIndex]);
+  }, [questions, currentQuestionIndex]); // Adicione setters de estado aqui se o linter o exigir
 
   const handleNextQuestion = useCallback(() => {
     setIsFeedbackVisible(false);
     if (errors >= 3) {
-      setGameState(GAME_STATES.RESULTS);
-      return;
+        console.log("App.jsx: Limite de erros atingido. A ir para Resultados.");
+        setGameState(GAME_STATES.RESULTS);
+        return;
     }
     if (currentQuestionIndex < questions.length - 1) {
+      console.log("App.jsx: A ir para a próxima pergunta.");
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
       setTimeLeft(15);
     } else {
+      console.log("App.jsx: Fim das perguntas. A ir para Resultados.");
       setGameState(GAME_STATES.RESULTS);
     }
-  }, [currentQuestionIndex, questions.length, errors]);
+  }, [currentQuestionIndex, questions.length, errors]); // Adicione setters de estado aqui se o linter o exigir
 
   const handleTimeUp = useCallback(() => {
     if (gameState !== GAME_STATES.QUIZ) return;
+    console.log("App.jsx: Tempo esgotado para a pergunta.");
     setErrors(prevErrors => prevErrors + 1);
     const currentQuestion = questions[currentQuestionIndex];
-    const correctAnswerText = currentQuestion && currentQuestion.opcoes && currentQuestion.opcoes[currentQuestion.correta]
+    const correctAnswerText = currentQuestion && currentQuestion.opcoes && typeof currentQuestion.correta !== 'undefined' && currentQuestion.opcoes[currentQuestion.correta]
         ? currentQuestion.opcoes[currentQuestion.correta]
         : "N/A";
     setFeedback({ message: `⏰ Tempo esgotado! Resposta: ${correctAnswerText}`, type: 'info' });
     setIsFeedbackVisible(true);
-  }, [questions, currentQuestionIndex, gameState]);
+  }, [questions, currentQuestionIndex, gameState]); // Adicione setters de estado aqui se o linter o exigir
 
   const handleExitGame = useCallback(() => {
+    console.log("App.jsx: handleExitGame chamado. A mudar para estado RESULTS.");
     setGameState(GAME_STATES.RESULTS);
-  }, []);
+  }, []); // Adicione setGameState se o linter o exigir
 
   const handleRestartGame = useCallback(() => {
-    handleStartGame();
+    console.log("App.jsx: handleRestartGame chamado.");
+    handleStartGame(); // Reutiliza a lógica de reset
   }, [handleStartGame]);
 
   const renderCurrentScreen = () => {
@@ -199,10 +203,14 @@ function App() {
         return <CountdownScreen onCountdownEnd={handleCountdownEnd} />;
       case GAME_STATES.QUIZ:
         if (questions.length === 0 || currentQuestionIndex >= questions.length) {
-<<<<<<< HEAD
-            console.warn("App.jsx: Tentativa de renderizar QuizScreen sem perguntas válidas. Voltando para DIFICULDADE.");
-            setGameState(GAME_STATES.DIFFICULTY); 
-            return <p style={{color: "white", textAlign: "center", fontSize: "1.5em"}}>Nenhuma pergunta carregada. Por favor, selecione uma dificuldade.</p>;
+            console.warn("App.jsx: Tentativa de renderizar QuizScreen sem perguntas válidas ou índice fora dos limites. Voltando para DIFICULDADE.");
+            // Evita loop infinito se setGameState estiver nas dependências de handleDifficultySelect
+            // e for chamado aqui diretamente. Uma melhoria seria ter um estado de erro.
+            // Por agora, apenas renderiza mensagem e espera nova seleção de dificuldade.
+            if (gameState !== GAME_STATES.DIFFICULTY) { // Prevenir loop se já estiver em DIFFICULTY e não houver perguntas
+                 setTimeout(() => setGameState(GAME_STATES.DIFFICULTY), 0); // Adia a mudança de estado
+            }
+            return <p style={{color: "white", textAlign: "center", fontSize: "1.5em", paddingTop: "20%"}}>Nenhuma pergunta carregada ou erro. Por favor, selecione uma dificuldade.</p>;
         }
         return (
             <QuizScreen
@@ -224,33 +232,6 @@ function App() {
                 currentQuestionNumber={currentQuestionIndex + 1}
                 totalQuestions={questions.length}
             />
-=======
-          // Algum estado inválido, talvez voltar para dificuldade ou mostrar erro
-          // Por segurança, voltamos para a dificuldade se não houver perguntas
-          setGameState(GAME_STATES.DIFFICULTY);
-          return <p>Carregando perguntas ou erro...</p>;
-        }
-        return (
-          <QuizScreen
-            question={questions[currentQuestionIndex]}
-            onAnswerSelect={handleAnswerSelected}
-            onNextQuestion={handleNextQuestion}
-            onExitGame={handleExitGame}
-            score={score}
-            errors={errors}
-            timeLeft={timeLeft}
-            setTimeLeft={setTimeLeft} // Para o QuizScreen controlar seu próprio timer
-            handDetected={handDetected}
-            cursorPosition={cursorPosition}
-            timeDelay={timeDelayForAction}
-            feedback={feedback}
-            isFeedbackVisible={isFeedbackVisible}
-            setIsFeedbackVisible={setIsFeedbackVisible}
-            onTimeUp={handleTimeUp}
-            currentQuestionNumber={currentQuestionIndex + 1}
-            totalQuestions={questions.length}
-          />
->>>>>>> 06925d86f399f8260f91137b1bf9f3cfb1ff772a
         );
       case GAME_STATES.RESULTS:
         return <ResultsScreen score={score} onRestartGame={handleRestartGame} cursorPosition={cursorPosition} timeDelay={timeDelayForAction} />;
@@ -268,6 +249,7 @@ function App() {
 
       {renderCurrentScreen()}
 
+      {/* Cursor verde visual */}
       {cursorPosition && (
         <div
           style={{
@@ -279,27 +261,14 @@ function App() {
             background: 'rgba(0, 255, 0, 0.7)',
             border: '1px solid white',
             borderRadius: '50%',
-            pointerEvents: 'none',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 9999,
-            transition: 'transform 0.1s ease-out'
+            pointerEvents: 'none', // Para não interferir com outros elementos
+            transform: 'translate(-50%, -50%)', // Centraliza o cursor no ponto
+            zIndex: 9999, // Para ficar no topo de tudo
+            transition: 'transform 0.05s ease-out' // Suaviza o movimento
           }}
         />
       )}
-<<<<<<< HEAD
-       {(gameState === GAME_STATES.QUIZ ) && (
-=======
-      {/* Botão de Sair Global (exemplo, pode ser específico da tela) */}
-      {(gameState === GAME_STATES.QUIZ) && (
->>>>>>> 06925d86f399f8260f91137b1bf9f3cfb1ff772a
-        <button
-          id="btn-exit"
-          onClick={handleExitGame}
-          style={{ position: 'absolute', bottom: '2vw', right: '2vw', zIndex: 100 }}
-        >
-          Sair
-        </button>
-      )}
+       {/* O botão Sair foi movido para dentro do QuizScreen.jsx */}
     </div>
   );
 }
