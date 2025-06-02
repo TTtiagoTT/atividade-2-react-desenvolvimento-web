@@ -73,3 +73,6 @@ async def read_root():
 
 
 # Para rodar: uvicorn main:app --reload
+#python3 -m venv venv
+#source venv/bin/activate
+#pip install "uvicorn[standard]" fastapi pydantic
