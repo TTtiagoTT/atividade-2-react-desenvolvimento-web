@@ -50,8 +50,6 @@ function HandposeDetector({ onHandMove }) {
         async function detectHandsLoop() {
             if (detectorRef.current && videoRef.current && videoRef.current.readyState === 4) {
                 const video = videoRef.current;
-                // MUDANÇA: Voltar para flipHorizontal: true
-                // Isto fornece keypoints como se a imagem não estivesse espelhada.
                 const hands = await detectorRef.current.estimateHands(video, { flipHorizontal: true });
                 const ctx = canvasRef.current ? canvasRef.current.getContext('2d') : null;
 
@@ -61,19 +59,14 @@ function HandposeDetector({ onHandMove }) {
                         canvasRef.current.height = video.videoHeight;
                     }
                     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-                    // Salva o estado atual do contexto
                     ctx.save();
-                    // Translada o contexto para que a origem (0,0) após o espelhamento
-                    // corresponda ao canto superior esquerdo visual do canvas espelhado.
+                    ctx.scale(-1, 1);
                     ctx.translate(-canvasRef.current.width, 0);
                 }
 
                 if (hands.length > 0) {
                     const hand = hands[0];
                     if (ctx) {
-                        // Desenha os keypoints. Como o contexto está espelhado e os keypoints
-                        // são de uma visão não espelhada (flipHorizontal:true), eles devem alinhar-se.
                         hand.keypoints.forEach(keypoint => {
                             ctx.beginPath();
                             ctx.arc(keypoint.x, keypoint.y, 6, 0, 2 * Math.PI);
@@ -88,12 +81,8 @@ function HandposeDetector({ onHandMove }) {
                     }
 
                     const indicator = hand.keypoints[8];
-                    // Com flipHorizontal: true, indicator.x é para a visão não espelhada.
                     let normalizedX = indicator.x / video.videoWidth;
-
-                    // O cursor verde já estava correto com esta lógica:
                     const screenX = normalizedX * window.innerWidth;
-
                     const normalizedY = indicator.y / video.videoHeight;
                     const screenY = normalizedY * window.innerHeight;
 
@@ -105,9 +94,8 @@ function HandposeDetector({ onHandMove }) {
                         onHandMove(null, false, false);
                     }
                 }
-
+                
                 if (ctx) {
-                    // Restaura o contexto para o seu estado original
                     ctx.restore();
                 }
             }
@@ -134,7 +122,7 @@ function HandposeDetector({ onHandMove }) {
     return (
         <>
             <video
-                ref={videoRef}
+                ref={videoRef} 
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -142,24 +130,22 @@ function HandposeDetector({ onHandMove }) {
                     width: '100vw',
                     height: '100vh',
                     objectFit: 'cover',
-                    transform: 'scaleX(-1)', // Vídeo continua espelhado
-                    zIndex: -1
+                    transform: 'scaleX(-1)',
+                    zIndex: 0 // ALTERADO: Vídeo na camada base visível
                 }}
                 playsInline
                 autoPlay
                 muted
             />
             <canvas
-                ref={canvasRef}
+                ref={canvasRef} 
                 style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
                     width: '100vw',
                     height: '100vh',
-                    // MUDANÇA: REMOVIDO transform: 'scaleX(-1)' do estilo do canvas
-                    // O espelhamento do desenho será feito no contexto.
-                    zIndex: 0,
+                    zIndex: 1, // ALTERADO: Canvas acima do vídeo
                     pointerEvents: 'none'
                 }}
             />

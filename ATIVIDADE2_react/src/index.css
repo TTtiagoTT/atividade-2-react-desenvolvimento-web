@@ -1,157 +1,648 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-body {
+/* Body / VÃ­deo / Canvas */
+body,
+html {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #222;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* VÃ­deo e canvas ocupam toda a tela */
+#video,
+#canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+  transform: scaleX(-1);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+/* TÃ­tulo do projeto */
+#titulo-projeto {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  font-size: 4.5vw;
+  font-weight: bold;
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #fff;
+  z-index: 5;
+  text-shadow: 3px 3px 12px #000c, 0 2px 16px #12c2e955;
+  user-select: none;
+  pointer-events: none;
 }
 
-button:hover {
-  border-color: #646cff;
+/* quando o quiz estiver ativo, move p/ canto inferior esquerdo */
+#titulo-projeto.quiz-active {
+  top: auto;
+  bottom: 0.1vw;
+  left: 2vw;
+  transform: none;
+  font-size: 3.5vw;
+  z-index: 8;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-/* Estilizando o contêiner das opções */
-ul#opcoes {
-  display: flex;
-  /* Organiza as opções em linha */
-  flex-wrap: wrap;
-  /* Permite que as opções quebrem para a próxima linha */
-  justify-content: center;
-  /* Centraliza as opções na linha */
-  gap: 15px;
-  /* Espaço entre as opções */
-  padding: 10px 0;
-  /* Remove padding padrão da lista e adiciona um pouco em cima/embaixo */
-  list-style-type: none;
-  /* Remove os marcadores de lista (bolinhas) */
-  margin: 0;
-  /* Remove margem padrão da lista */
-}
-
-/* Estilizando cada item de opção (o <li>) */
-ul#opcoes li {
-  background-color: #ffffff;
-  /* Fundo branco ou outra cor clara */
-  border: 2px solid #dcdcdc;
-  /* Borda sutil */
-  border-radius: 10px;
-  /* Bordas levemente arredondadas */
-
-  /* Aumentando o tamanho - ESTES SÃO OS MAIS IMPORTANTES PARA VOCÊ */
-  padding: 25px 20px;
-  /* Aumenta bastante o espaço interno -> faz o botão parecer maior */
-  min-width: 220px;
-  /* Largura mínima de cada opção */
-  min-height: 70px;
-  /* Altura mínima (ajuste conforme o padding e font-size) */
-  font-size: 1.6em;
-  /* Tamanho da fonte BEM maior */
-
+/* Escolha de dificuldade (instruÃ§Ã£o) */
+.choose-diff {
+  font-size: 1.2rem;
+  font-weight: bold;
   text-align: center;
-  /* Centraliza o texto da opção */
-  cursor: pointer;
-  /* Muda o cursor para indicar que é clicável */
+  margin-bottom: 1rem;
+  color: #333;
+}
 
+/* Painel de controle (botÃ£o Iniciar) */
+.control-panel {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 2;
   display: flex;
-  /* Para centralizar o texto verticalmente também */
+  justify-content: center;
+  width: 100%;
+}
+
+/* Estilo genÃ©rico para todos os botÃµes */
+button {
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  color: #0a2740;
+  font-size: 2.4em;
+  padding: 2vh 5vw;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0005;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .15s;
+  font-weight: 600;
+}
+
+/* Hover para TODOS os botÃµes (inclui #btn-iniciar) */
+button.hover,
+#btn-iniciar.hover {
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Header container: pergunta + side-info + stats */
+#header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;  /* estica verticalmente os filhos */
+  position: absolute;
+  top: 2vw;
+  left: 2vw;
+  right: 2vw;
+  pointer-events: auto;
+  z-index: 6;
+  gap: 2vw;
+}
+
+
+/* Pergunta em bloco branco */
+#pergunta-block {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.9);
+  color: #0a2740;
+  padding: 1.5em;
+  border-radius: 8px;
+  font-size: 2em;
+  text-align: center;
+  box-shadow: 0 2px 12px #0007;
+}
+
+/* Disciplina e nÃ­vel */
+#side-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+/* Blocos de disciplina e dificuldade */
+#disciplina-block,
+#dificuldade-block {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 0.8em 1.2em;
+  border-radius: 8px;
+  font-size: 1.2em;
+  box-shadow: 0 2px 10px #0005;
+  text-align: center;
+}
+
+/* Score e contador de dedos */
+#stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+/* Blocos de score e contador de dedos */
+#score-block,
+#contador-dedos {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  font-size: 1.4em;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* OpÃ§Ãµes do quiz */
+#opcoes-block {
+  position: absolute;
+  left: 2vw;
+  right: 2vw;
+  top: 25vh;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px #0007;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+/* OpÃ§Ãµes do quiz (lista) */
+#opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2vw;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* OpÃ§Ãµes do quiz (itens da lista) */
+#opcoes li {
+  aspect-ratio: 1/1;
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-  /* Transições suaves */
-
-  color: #333333;
-
-  /* Para um layout de 2 colunas (opcional, ajuste conforme necessário) */
-  /* flex-grow: 1; */
-  /* flex-basis: calc(50% - 15px); */
-  /* (50% - (gap / 2)) para duas colunas */
-  /* Se quiser 1 coluna em telas menores, use media queries */
+  background: rgba(255, 255, 255, 0.9);
+  color: #0a2740;
+  font-size: 2em;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0005;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .15s;
+  padding: 1em;
 }
 
-/* Estilo para quando o cursor (mão ou mouse) está sobre a opção */
-ul#opcoes li.hover {
-  background-color: #e0e7ff;
-  /* Um azul bem claro para hover */
-  border-color: #007bff;
-  /* Borda azul para destacar */
-  transform: scale(1.03);
-  /* Leve efeito de zoom */
+/* OpÃ§Ãµes do quiz (hover) */
+#opcoes li.hover {
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  color: #fff;
+  transform: scale(1.05);
 }
 
-/* Estilos para destacar respostas corretas/incorretas (você já tem as classes no JSX) */
-ul#opcoes li.correct-answer-highlight {
-  background-color: #d4edda;
-  /* Verde claro para correto */
-  border-color: #c3e6cb;
-  color: #155724;
+/* Dificuldade (lista) */
+#difficulty-container {
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: auto;
 }
 
-ul#opcoes li.incorrect-answer-highlight {
-  background-color: #f8d7da;
-  /* Vermelho claro para incorreto */
-  border-color: #f5c6cb;
-  color: #721c24;
+/* TÃ­tulo da dificuldade */
+#dificuldades {
+  display: flex;
+  gap: 4vw;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+
+/* Itens da lista de dificuldades */
+#dificuldades li {
+  background: rgba(255, 255, 255, 0.85);
+  color: #0a2740;
+  font-size: 2em;
+  padding: 3.5vh 5vw;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0005;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .15s;
+}
+
+/* Hover para os itens da lista de dificuldades */
+#dificuldades li.hover {
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* BotÃ£o Sair */
+#btn-exit {
+  position: absolute;
+  bottom: 2vw;
+  right: 2vw;
+  background: rgba(255, 80, 80, 0.9);
+  color: #fff;
+  font-size: 1.6em;
+  padding: 2.3em 1.7em;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  cursor: pointer;
+  z-index: 7;
+}
+
+/* Hover para o botÃ£o Sair */
+#btn-exit.hover {
+  background: #f64f59;
+  transform: scale(1.05);
+}
+
+/* Tela de resultados */
+.hidden {
+  display: none !important;
+}
+
+/* Tela de resultados */
+#results-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+}
+
+/* Tela de resultados (apenas quando visÃ­vel) */
+#results-screen:not(.hidden) {
+  display: flex;
+}
+
+/* ConteÃºdo da tela de resultados */
+#results-content {
+  background: #fff;
+  padding: 2em;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 80vw;
+}
+
+/* TÃ­tulo e parÃ¡grafo da tela de resultados */
+#results-content h2 {
+  margin-bottom: 0.5em;
+}
+
+/* TÃ­tulo da tela de resultados */
+#results-content p {
+  font-size: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+/* BotÃ£o Reiniciar */
+#btn-restart {
+  background: #12c2e9;
+  color: #fff;
+  font-size: 1.4em;
+  padding: 0.8em 1.5em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Hover para o botÃ£o Reiniciar */
+#btn-restart.hover {
+  background: #0ab4d0;
+}
+
+/* Feedback / botÃ£o PrÃ³xima */
+#feedback-container {
+  position: absolute;
+  bottom: 2vw;
+  right: 12vw;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* Feedback / botÃ£o PrÃ³xima (apenas quando visÃ­vel) */
+#feedback-container.hidden {
+  display: none;
+}
+
+/* Texto de feedback */
+#feedback-message {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #0a2740;
+}
+
+/* BotÃ£o PrÃ³xima */
+#btn-next {
+  background: #12c2e9;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1.5em 4em;
+  font-size: 2em;
+  min-width: 200px;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+
+/* Hover para o botÃ£o PrÃ³xima */
+#btn-next.hover,
+#btn-next:hover {
+  background: #0ab4d0;
+  transform: scale(1.08);
+}
+
+/* Cursor personalizado */
+#finger-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+/* Estilo para todas as boxes de status */
+.stats-box {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  font-size: 1.4em;
+  font-weight: 600;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* Estilo para o bloco de erros */
+.tempo-normal {
+  color: #fff;
+}
+
+/* Estilo para o bloco de erros */
+.tempo-aviso {
+  color: #ffcc00;
+}
+
+/* Estilo para o bloco de erros */
+.tempo-perigo {
+  color: #ff3333;
+  animation: pulse 0.5s infinite alternate;
+}
+
+/* Estilo para o bloco de erros */
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* Estilo para o bloco de erros */
+#erros-block {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  font-size: 1.4em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 100px;
+}
+
+/* Estilo para o bloco de erros */
+#erros-texto::before {
+  content: "X ";
+  color: #ff3333;
+  font-weight: bold;
+}
+
+/* Estilo para o bloco de erros */
+@keyframes piscar {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Estilo para o bloco de erros */
+#cronometro-container {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px #0005;
+  font-size: 1.4em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 100px;
+}
+
+#cronometro-emoji {
+  /* Emoji estÃ¡tico */
+  display: inline-block;
+}
+
+#cronometro {
+  transition: color 0.3s;
+  font-weight: bold;
+}
+
+.tempo-normal {
+  color: #fff;
+}
+
+.tempo-aviso {
+  color: #ffcc00;
+}
+
+.tempo-perigo {
+  color: #ff3333;
+  animation: pulse 0.5s infinite alternate;
+}
+
+/* Disciplina e Dificuldade abaixo das opÃ§Ãµes */
+#info-abaixo-opcoes {
+  position: absolute;
+  bottom: 15vh;       /* ajuste para ficar logo abaixo do bloco de opÃ§Ãµes */
+  left: 2vw;
+  display: flex;
+  flex-direction: row;
+  gap: 0.8vh;
+  z-index: 5;
+}
+
+#info-abaixo-opcoes #disciplina-block,
+#info-abaixo-opcoes #dificuldade-block {
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  font-size: 1.2em;
+  box-shadow: 0 2px 10px #0005;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Ajusta layout 2Ã—2 para os quatro blocos no stats-container */
+#stats-container {
+  display: grid;
+  grid-template-areas:
+    "score tempo"
+    "mao   erros";
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr 1fr; /* duas linhas com altura igual */
+  gap: 1vw;
+  height: 100%;               /* preenche toda a altura disponÃ­vel */
+}
+
+/* Ajusta os blocos dentro do stats-container */
+#stats-container #score-block {
+  grid-area: score;
+}
+
+#stats-container #cronometro-container {
+  grid-area: tempo;
+  max-width: 80px;            /* mais estreito horizontalmente */
+}
+
+#stats-container #mao-status {
+  grid-area: mao;
+}
+
+#stats-container #erros-block {
+  grid-area: erros;
+  max-width: 80px;            /* mais estreito horizontalmente */
+}
+
+/* Deixa todo o header (pergunta + stats) um pouco mais compacto */
+#header-container {
+  top: 1.5vw;       /* sobe um tiquinho o header */
+  gap: 1vw;         /* menor espaÃ§amento horizontal entre pergunta e stats */
+}
+
+/* Pergunta mais â€œachatadaâ€ */
+#pergunta-block {
+  padding: 1.9em;     /* antes era 1.5em */
+  font-size: 1.8em; /* opcional: texto um pouco menor */
+}
+
+/* Stats 2Ã—2 com blocos mais compactos */
+#stats-container {
+  gap: 0.5vh;       /* reduz o espaÃ§amento interno entre blocos */
+}
+
+#stats-container > div {
+  padding: 1.2em;   /* antes era 1em */
+  font-size: 1.2em; /* opcional: texto menor */
+}
+
+#difficulty-title {
+  font-size: 4rem;            /* texto maior */
+  text-align: center;         /* centraliza o texto */
+  margin-bottom: 2rem;
+  
+  /* Mesma aparÃªncia do logo TapQuiz */
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Sombra suave para dar profundidade */
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Ajusta o container de dificuldade */
+#difficulty-container {
+  position: absolute;
+  top: 30vh;               /* sobe o container para 30% da altura da viewport */
+  left: 50%;
+  transform: translate(-50%, -0%); /* centraliza horizontalmente, sem baixar verticalmente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 3;
+}
+
+#difficulty-title {
+  /* mantÃ©m as propriedades de gradiente e tamanho que jÃ¡ definimos */
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+#tela-contagem {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.hidden {
+  display: none;
 }
