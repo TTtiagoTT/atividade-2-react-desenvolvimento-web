@@ -1,2 +1,3 @@
 # Ignorar ambiente virtual do Python do backend
-/back/venv/
+venv/
+__pycache__/

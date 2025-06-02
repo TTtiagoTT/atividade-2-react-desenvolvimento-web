@@ -1,9 +1,6 @@
 # Nodes
 /node_modules
 
-# Ignorar ambiente virtual do Python do backend
-/back/venv/
-
 # Logs
 logs
 *.log
@@ -13,8 +10,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
+dist             // CORRETO: Para ignorar a pasta de build do Vite.
 dist-ssr
 *.local
 

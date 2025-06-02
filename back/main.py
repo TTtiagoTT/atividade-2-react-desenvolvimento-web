@@ -33,13 +33,10 @@ app.add_middleware(
 )
 
 def load_questions_from_file(filepath: str = "questions.json") -> Dict[int, List[Dict]]:
-    print(f"DEBUG: Tentando carregar '{filepath}'...") # Novo print
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            print(f"DEBUG: Conteúdo bruto do JSON carregado: {data}") # Novo print
             converted_data = {int(k): v for k, v in data.items()}
-            print(f"DEBUG: Dados convertidos (chaves int): {converted_data}") # Novo print
             return converted_data
     except FileNotFoundError:
         print(f"AVISO IMPORTANTE: Arquivo '{filepath}' não encontrado. Nenhuma pergunta carregada.")
@@ -53,7 +50,6 @@ def load_questions_from_file(filepath: str = "questions.json") -> Dict[int, List
     
 # Carrega as perguntas quando a API inicia
 questions_data = load_questions_from_file() # Esta linha lê do questions.json
-print(f"DEBUG FINAL: Conteúdo de questions_data após carregamento: {questions_data}") # Novo print
 
 # Endpoint para buscar perguntas por ID de dificuldade
 @app.get("/api/questions/{difficulty_id}", response_model=List[Question])
