@@ -64,8 +64,6 @@ function HandposeDetector({ onHandMove }) {
 
                     // Salva o estado atual do contexto
                     ctx.save();
-                    // Espelha o CONTEXTO de desenho do canvas horizontalmente
-                    ctx.scale(-1, 1);
                     // Translada o contexto para que a origem (0,0) após o espelhamento
                     // corresponda ao canto superior esquerdo visual do canvas espelhado.
                     ctx.translate(-canvasRef.current.width, 0);
@@ -92,7 +90,7 @@ function HandposeDetector({ onHandMove }) {
                     const indicator = hand.keypoints[8];
                     // Com flipHorizontal: true, indicator.x é para a visão não espelhada.
                     let normalizedX = indicator.x / video.videoWidth;
-                    
+
                     // O cursor verde já estava correto com esta lógica:
                     const screenX = normalizedX * window.innerWidth;
 
@@ -107,7 +105,7 @@ function HandposeDetector({ onHandMove }) {
                         onHandMove(null, false, false);
                     }
                 }
-                
+
                 if (ctx) {
                     // Restaura o contexto para o seu estado original
                     ctx.restore();

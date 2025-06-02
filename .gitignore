@@ -1,0 +1,2 @@
+# Ignorar ambiente virtual do Python do backend
+/back/venv/

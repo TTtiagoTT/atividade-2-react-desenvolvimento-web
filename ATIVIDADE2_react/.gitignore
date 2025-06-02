@@ -1,3 +1,9 @@
+# Nodes
+/node_modules
+
+# Ignorar ambiente virtual do Python do backend
+/back/venv/
+
 # Logs
 logs
 *.log

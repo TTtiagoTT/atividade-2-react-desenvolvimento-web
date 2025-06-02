@@ -1,8 +1,7 @@
 // src/components/Screens/StartScreen.jsx
 import React, { useRef, useEffect, useState } from 'react';
 
-// Função helper para verificar se o cursor está sobre um elemento
-// (Você pode colocar isso em um arquivo utils.js)
+// Sua função helper isCursorOverElement (verifique se está importada ou definida aqui)
 function isCursorOverElement(cursorPos, element, margin = 0) {
     if (!cursorPos || !element) return false;
     const rect = element.getBoundingClientRect();
@@ -17,52 +16,57 @@ function isCursorOverElement(cursorPos, element, margin = 0) {
 function StartScreen({ onStartGame, cursorPosition, timeDelay }) {
     const startButtonRef = useRef(null);
     const [isHoveringStart, setIsHoveringStart] = useState(false);
-    const hoverTimeoutRef = useRef(null);
+    const hoverTimeoutRef = useRef(null); // Para guardar o ID do timeout
 
+    // Efeito 1: Gerencia o estado 'isHoveringStart' baseado na posição do cursor
     useEffect(() => {
+        // Se não houver cursor ou o botão não estiver pronto, considera que não está hover.
         if (!cursorPosition || !startButtonRef.current) {
-            if (isHoveringStart) setIsHoveringStart(false); // Reset hover se o cursor sumir
+            if (isHoveringStart) setIsHoveringStart(false); // Garante que o hover seja desativado
             return;
         }
 
         const overStart = isCursorOverElement(cursorPosition, startButtonRef.current);
 
-        if (overStart) {
-            if (!isHoveringStart) { // Entrou no hover agora
-                setIsHoveringStart(true);
-                // Limpar timeout anterior, se houver
-                if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-                hoverTimeoutRef.current = setTimeout(() => {
-                    console.log("Botão Iniciar 'clicado' por gesto!");
-                    onStartGame();
-                    setIsHoveringStart(false); // Reset após ação
-                }, timeDelay);
-            }
-        } else {
-            if (isHoveringStart) { // Saiu do hover
-                setIsHoveringStart(false);
-                if (hoverTimeoutRef.current) {
-                    clearTimeout(hoverTimeoutRef.current);
-                    hoverTimeoutRef.current = null;
-                }
-            }
+        // Atualiza o estado de hover SOMENTE se ele realmente mudou
+        // Isso evita re-execuções desnecessárias do segundo useEffect se o cursor se mover DENTRO do botão
+        if (overStart !== isHoveringStart) {
+            setIsHoveringStart(overStart);
         }
 
-        // Cleanup timeout se o componente desmontar ou cursorPosition mudar antes do timeout
+    }, [cursorPosition, isHoveringStart]); // Depende da posição do cursor e do estado de hover atual
+
+    // Efeito 2: Lida com o timer de ação quando 'isHoveringStart' muda
+    useEffect(() => {
+        if (isHoveringStart) {
+            // Se está em hover, inicia o timer para a ação
+            console.log(`StartScreen: Iniciando timer de ${timeDelay}ms para clique.`);
+            hoverTimeoutRef.current = setTimeout(() => {
+                console.log("StartScreen: Timer concluído! Chamando onStartGame.");
+                onStartGame();
+                setIsHoveringStart(false); // Desativa o hover após a ação para evitar re-clique imediato
+                hoverTimeoutRef.current = null; // Limpa a referência do timer
+            }, timeDelay);
+        }
+
+        // Função de limpeza para este efeito:
+        // Será chamada se 'isHoveringStart' mudar para false ANTES do timer disparar,
+        // ou se o componente for desmontado, ou se 'timeDelay' ou 'onStartGame' mudarem.
         return () => {
             if (hoverTimeoutRef.current) {
+                console.log("StartScreen: Limpando timer existente.");
                 clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = null;
             }
         };
-    }, [cursorPosition, onStartGame, timeDelay, isHoveringStart]);
-
+    }, [isHoveringStart, timeDelay, onStartGame]); // Depende do estado de hover e das props timeDelay/onStartGame
 
     return (
-        <div className="control-panel" /* style={{ display: 'flex' }} */ > {/* O App.jsx controla a visibilidade geral da tela */}
+        <div className="control-panel">
             <button
                 ref={startButtonRef}
-                id="btn-iniciar-react" // Use novos IDs ou confie nas refs
-                className={isHoveringStart ? 'hover' : ''} // Aplica a classe .hover do seu CSS
+                id="btn-iniciar-react"
+                className={isHoveringStart ? 'hover' : ''}
             >
                 Iniciar
             </button>

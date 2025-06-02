@@ -4,7 +4,7 @@ import QuestionBlock from './QuestionBlock';
 import OptionsBlock from './OptionsBlock';
 import StatsDisplay from './StatsDisplay';
 import FeedbackDisplay from './FeedbackDisplay';
-import { isCursorOverElement } from '../../../App'; // Ajuste o caminho se necessário
+import { isCursorOverElement } from '../../../App';
 
 function QuizScreen({
     question,
@@ -50,31 +50,51 @@ function QuizScreen({
 
 
     // Lógica de hover para o botão "Próxima" (que só aparece com o feedback)
+    // Efeito 1 para o botão "Próxima": Atualiza o estado isHoveringNext
     useEffect(() => {
+        // Só faz sentido detectar hover se o feedback (e o botão "Próxima") estiver visível,
+        // se houver posição do cursor e se a ref do botão estiver pronta.
         if (!isFeedbackVisible || !cursorPosition || !nextButtonRef.current) {
-            if (isHoveringNext) setIsHoveringNext(false);
+            if (isHoveringNext) setIsHoveringNext(false); // Garante que o hover seja desativado
             return;
         }
 
         const overNext = isCursorOverElement(cursorPosition, nextButtonRef.current);
 
-        if (overNext) {
-            if (!isHoveringNext) {
-                setIsHoveringNext(true);
-                if (nextActionTimeoutRef.current) clearTimeout(nextActionTimeoutRef.current);
-                nextActionTimeoutRef.current = setTimeout(() => {
-                    onNextQuestion();
-                    setIsHoveringNext(false);
-                }, timeDelay);
-            }
-        } else {
-            if (isHoveringNext) {
-                setIsHoveringNext(false);
-                if (nextActionTimeoutRef.current) clearTimeout(nextActionTimeoutRef.current);
-            }
+        // Atualiza o estado de hover SOMENTE se ele realmente mudou
+        if (overNext !== isHoveringNext) {
+            setIsHoveringNext(overNext);
         }
-        return () => { if (nextActionTimeoutRef.current) clearTimeout(nextActionTimeoutRef.current); };
-    }, [cursorPosition, timeDelay, onNextQuestion, isFeedbackVisible, isHoveringNext]);
+    }, [cursorPosition, isFeedbackVisible, nextButtonRef, isHoveringNext]); // Adicionado nextButtonRef aqui
+
+    // Efeito 2 para o botão "Próxima": Gerencia o timer e a ação de clique
+    useEffect(() => {
+        // Só inicia o timer se o feedback estiver visível E estiver em hover sobre o botão "Próxima"
+        if (isFeedbackVisible && isHoveringNext) {
+            console.log(`QuizScreen: Hover sobre "Próxima". Iniciando timer de ${timeDelay}ms.`);
+            nextActionTimeoutRef.current = setTimeout(() => {
+                // Verifica novamente as condições antes de disparar a ação
+                // (o estado poderia ter mudado enquanto o timer estava rodando)
+                if (isFeedbackVisible && isHoveringNext) {
+                    console.log(`QuizScreen: Timer para "Próxima" concluído. Chamando onNextQuestion.`);
+                    onNextQuestion(); // Chama a função para ir para a próxima pergunta
+                    // setIsHoveringNext(false); // O primeiro useEffect cuidará de resetar o hover
+                    // se o cursor sair ou isFeedbackVisible mudar.
+                    nextActionTimeoutRef.current = null;
+                }
+            }, timeDelay);
+        }
+
+        // Função de limpeza para este useEffect
+        return () => {
+            if (nextActionTimeoutRef.current) {
+                console.log(`QuizScreen: Limpando timer do botão "Próxima".`);
+                clearTimeout(nextActionTimeoutRef.current);
+                nextActionTimeoutRef.current = null;
+            }
+        };
+    }, [isHoveringNext, isFeedbackVisible, timeDelay, onNextQuestion]); // Dependências para a lógica do timer/ação
+
 
     // Lógica de hover para o botão "Sair" (se for específico desta tela)
     // Se você estiver usando o botão Sair global do App.jsx, esta lógica pode não ser necessária aqui
@@ -123,8 +143,8 @@ function QuizScreen({
 
             {/* Informações abaixo das opções */}
             <div id="info-abaixo-opcoes">
-                 <div id="disciplina-block">{question.disciplina}</div>
-                 <div id="dificuldade-block">Nível: {['Fácil', 'Médio', 'Difícil', 'Aleatório'][question.dificuldade] || 'N/A'}</div>
+                <div id="disciplina-block">{question.disciplina}</div>
+                <div id="dificuldade-block">Nível: {['Fácil', 'Médio', 'Difícil', 'Aleatório'][question.dificuldade] || 'N/A'}</div>
             </div>
 
             {/* Botão de Sair específico da tela (opcional, se diferente do global) */}

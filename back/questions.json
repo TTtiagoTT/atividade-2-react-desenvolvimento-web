@@ -1,0 +1,1074 @@
+{
+    "0": [
+        {
+            "id": 1,
+            "pergunta": "Quanto é 3 + 1?",
+            "opcoes": [
+                "2",
+                "3",
+                "4",
+                "5"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 2,
+            "pergunta": "Quanto é 7 - 2?",
+            "opcoes": [
+                "3",
+                "4",
+                "5",
+                "6"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 3,
+            "pergunta": "Quanto é 1/2 + 1/2?",
+            "opcoes": [
+                "1",
+                "2",
+                "0,5",
+                "1,5"
+            ],
+            "correta": 0,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 4,
+            "pergunta": "Qual número vem depois do 7?",
+            "opcoes": [
+                "6",
+                "8",
+                "9",
+                "5"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 5,
+            "pergunta": "Qual número vem depois do 9?",
+            "opcoes": [
+                "8",
+                "10",
+                "11",
+                "7"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 6,
+            "pergunta": "Qual forma tem 3 lados?",
+            "opcoes": [
+                "Quadrado",
+                "Círculo",
+                "Triângulo",
+                "Retângulo"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 7,
+            "pergunta": "\"Vou e volto\" tem quantos verbos?",
+            "opcoes": [
+                "0",
+                "1",
+                "2",
+                "3"
+            ],
+            "correta": 3,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 8,
+            "pergunta": "Qual palavra rima com \"casa\"?",
+            "opcoes": [
+                "mala",
+                "vaso",
+                "passa",
+                "faca"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 9,
+            "pergunta": "Qual dessas palavras é um verbo?",
+            "opcoes": [
+                "mesa",
+                "correr",
+                "azul",
+                "bola"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 10,
+            "pergunta": "Qual palavra está escrita corretamente?",
+            "opcoes": [
+                "caza",
+                "cassa",
+                "casa",
+                "kasa"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 11,
+            "pergunta": "Qual é o plural de \"caneta\"?",
+            "opcoes": [
+                "canetas",
+                "canetos",
+                "canetões",
+                "canetis"
+            ],
+            "correta": 0,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 12,
+            "pergunta": "Qual é o plural de \"chapéu\"?",
+            "opcoes": [
+                "chapéus",
+                "chapéis",
+                "chapéiz",
+                "chapéies"
+            ],
+            "correta": 0,
+            "dificuldade": 0,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 13,
+            "pergunta": "Qual estrela aquece a Terra?",
+            "opcoes": [
+                "Lua",
+                "Vênus",
+                "Sol",
+                "Marte"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 14,
+            "pergunta": "Qual animal é um réptil?",
+            "opcoes": [
+                "gato",
+                "cobra",
+                "pássaro",
+                "baleia"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 15,
+            "pergunta": "Qual desses é um mamífero?",
+            "opcoes": [
+                "cobra",
+                "peixe",
+                "cachorro",
+                "galinha"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 16,
+            "pergunta": "O que a minhoca faz no solo?",
+            "opcoes": [
+                "Destrói",
+                "Fertiliza",
+                "Ilumina",
+                "Resfria"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 17,
+            "pergunta": "Para que servem as brânquias?",
+            "opcoes": [
+                "Voar",
+                "Respirar na água",
+                "Correr",
+                "Digerir"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 18,
+            "pergunta": "Qual é a função do coração?",
+            "opcoes": [
+                "Respirar",
+                "Bater",
+                "Bombear sangue",
+                "Digere alimentos"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 19,
+            "pergunta": "O que cobre a maior parte da Terra?",
+            "opcoes": [
+                "Terra",
+                "Água",
+                "Areia",
+                "Gelo"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 20,
+            "pergunta": "Qual oceano banha o Brasil?",
+            "opcoes": [
+                "Pacífico",
+                "Índico",
+                "Atlântico",
+                "Ártico"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 21,
+            "pergunta": "Qual país tem formato de bota?",
+            "opcoes": [
+                "França",
+                "Itália",
+                "Portugal",
+                "Espanha"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 22,
+            "pergunta": "Qual é a capital do Brasil?",
+            "opcoes": [
+                "São Paulo",
+                "Rio de Janeiro",
+                "Brasília",
+                "Curitiba"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 23,
+            "pergunta": "Qual é o clima predominante no Nordeste?",
+            "opcoes": [
+                "Polar",
+                "Desértico",
+                "Semiárido",
+                "Equatorial"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 24,
+            "pergunta": "Quem descobriu o Brasil?",
+            "opcoes": [
+                "Cabral",
+                "Colombo",
+                "Vespucio",
+                "Magalhães"
+            ],
+            "correta": 0,
+            "dificuldade": 0,
+            "disciplina": "historia"
+        },
+        {
+            "id": 25,
+            "pergunta": "O Brasil foi colonizado por qual país?",
+            "opcoes": [
+                "Espanha",
+                "França",
+                "Portugal",
+                "Inglaterra"
+            ],
+            "correta": 2,
+            "dificuldade": 0,
+            "disciplina": "historia"
+        },
+        {
+            "id": 26,
+            "pergunta": "Qual era o nome do navio de Cabral?",
+            "opcoes": [
+                "Santa Maria",
+                "Nina",
+                "Pinta",
+                "Santa Clara"
+            ],
+            "correta": 0,
+            "dificuldade": 0,
+            "disciplina": "historia"
+        },
+        {
+            "id": 27,
+            "pergunta": "Quem foi o primeiro presidente do Brasil?",
+            "opcoes": [
+                "Getúlio Vargas",
+                "Deodoro da Fonseca",
+                "Dom Pedro I",
+                "Lula"
+            ],
+            "correta": 1,
+            "dificuldade": 0,
+            "disciplina": "historia"
+        }
+    ],
+    "1": [
+        {
+            "id": 28,
+            "pergunta": "Quanto é 36 ÷ 6?",
+            "opcoes": [
+                "4",
+                "5",
+                "6",
+                "7"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 29,
+            "pergunta": "Quanto é 5 x 3?",
+            "opcoes": [
+                "15",
+                "10",
+                "20",
+                "8"
+            ],
+            "correta": 0,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 30,
+            "pergunta": "Quanto é 6 × 4?",
+            "opcoes": [
+                "18",
+                "20",
+                "24",
+                "30"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 31,
+            "pergunta": "Qual é 25% de 100?",
+            "opcoes": [
+                "50",
+                "25",
+                "75",
+                "100"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 32,
+            "pergunta": "Quanto é 40 dividido por 5?",
+            "opcoes": [
+                "6",
+                "7",
+                "8",
+                "9"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 33,
+            "pergunta": "Se um metro custa R$10, quanto custam 3m?",
+            "opcoes": [
+                "R$13",
+                "R$30",
+                "R$10",
+                "R$33"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 34,
+            "pergunta": "Qual palavra é oxítona?",
+            "opcoes": [
+                "caneta",
+                "árvore",
+                "parabéns",
+                "livro"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 35,
+            "pergunta": "Identifique o verbo: 'O gato pulou o muro'",
+            "opcoes": [
+                "gato",
+                "pulou",
+                "muro",
+                "o"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 36,
+            "pergunta": "O que é um substantivo?",
+            "opcoes": [
+                "Ação",
+                "Lugar/Pessoa/Coisa",
+                "Qualidade",
+                "Estado"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 37,
+            "pergunta": "Qual é o sujeito da frase: 'Maria comeu o bolo'?",
+            "opcoes": [
+                "bolo",
+                "Maria",
+                "comeu",
+                "o"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 38,
+            "pergunta": "O que é uma sílaba tônica?",
+            "opcoes": [
+                "A mais fraca",
+                "A mais forte",
+                "A última",
+                "A primeira"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 39,
+            "pergunta": "O que é um adjetivo?",
+            "opcoes": [
+                "Palavra que nomeia",
+                "Palavra que descreve",
+                "Verbo",
+                "Pronome"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 40,
+            "pergunta": "Onde nascem os peixes?",
+            "opcoes": [
+                "Árvores",
+                "Ovos",
+                "Flores",
+                "Nuvens"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 41,
+            "pergunta": "Qual parte da planta absorve água do solo?",
+            "opcoes": [
+                "Folha",
+                "Raiz",
+                "Caule",
+                "Fruto"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 42,
+            "pergunta": "Qual planeta é conhecido como \"Vermelho\"?",
+            "opcoes": [
+                "Vênus",
+                "Marte",
+                "Júpiter",
+                "Saturno"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 43,
+            "pergunta": "O que os vegetais precisam para fazer fotossíntese?",
+            "opcoes": [
+                "Luz solar",
+                "Som",
+                "Vento",
+                "Açúcar"
+            ],
+            "correta": 0,
+            "dificuldade": 1,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 44,
+            "pergunta": "O que a clorofila faz nas plantas?",
+            "opcoes": [
+                "Dá cor azul",
+                "Transforma luz em alimento",
+                "Atrai insetos",
+                "Armazena água"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 45,
+            "pergunta": "Capital da Argentina?",
+            "opcoes": [
+                "Lima",
+                "Montevidéu",
+                "Buenos Aires",
+                "Santiago"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 46,
+            "pergunta": "Capital de Minas Gerais?",
+            "opcoes": [
+                "Rio",
+                "Salvador",
+                "Belo Horizonte",
+                "Recife"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 47,
+            "pergunta": "Qual é o continente do Brasil?",
+            "opcoes": [
+                "Ásia",
+                "Europa",
+                "América do Sul",
+                "África"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 48,
+            "pergunta": "Qual estado brasileiro tem a maior floresta?",
+            "opcoes": [
+                "São Paulo",
+                "Amazonas",
+                "Rio",
+                "Minas"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 49,
+            "pergunta": "Qual é o maior rio do Brasil?",
+            "opcoes": [
+                "Rio São Francisco",
+                "Rio Amazonas",
+                "Rio Tietê",
+                "Rio Paraná"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 50,
+            "pergunta": "Quem pintou o \"Grito\"?",
+            "opcoes": [
+                "Van Gogh",
+                "Monet",
+                "Munch",
+                "Picasso"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "historia"
+        },
+        {
+            "id": 51,
+            "pergunta": "Quando foi abolida a escravidão?",
+            "opcoes": [
+                "1822",
+                "1850",
+                "1888",
+                "1900"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "historia"
+        },
+        {
+            "id": 52,
+            "pergunta": "Quem foi Tiradentes?",
+            "opcoes": [
+                "Cantor",
+                "Revolucionário",
+                "Presidente",
+                "Imperador"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "historia"
+        },
+        {
+            "id": 53,
+            "pergunta": "Quem foi Dom Pedro II?",
+            "opcoes": [
+                "Presidente",
+                "Imperador",
+                "Revolucionário",
+                "Escritor"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "historia"
+        },
+        {
+            "id": 54,
+            "pergunta": "Em que ano foi proclamada a República no Brasil?",
+            "opcoes": [
+                "1888",
+                "1889",
+                "1890",
+                "1879"
+            ],
+            "correta": 1,
+            "dificuldade": 1,
+            "disciplina": "historia"
+        },
+        {
+            "id": 55,
+            "pergunta": "Qual instrumento tem cordas e caixa acústica?",
+            "opcoes": [
+                "Violino",
+                "Piano",
+                "Violão",
+                "Flauta"
+            ],
+            "correta": 2,
+            "dificuldade": 1,
+            "disciplina": "artes"
+        }
+    ],
+    "2": [
+        {
+            "id": 56,
+            "pergunta": "Resolva: (10 - 5) × 2",
+            "opcoes": [
+                "5",
+                "10",
+                "15",
+                "20"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 57,
+            "pergunta": "Qual é o valor de 5² - 3²?",
+            "opcoes": [
+                "16",
+                "14",
+                "12",
+                "10"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 58,
+            "pergunta": "Se x = 2, quanto vale 3x + 4?",
+            "opcoes": [
+                "10",
+                "8",
+                "6",
+                "7"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 59,
+            "pergunta": "Se x = 3, quanto vale 2x + 5?",
+            "opcoes": [
+                "10",
+                "11",
+                "12",
+                "13"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 60,
+            "pergunta": "Qual é o valor de (3^2 + 4^2) ÷ 5?",
+            "opcoes": [
+                "5",
+                "6",
+                "7",
+                "25"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "matematica"
+        },
+        {
+            "id": 61,
+            "pergunta": "Qual é o sinônimo de \"rápido\"?",
+            "opcoes": [
+                "devagar",
+                "veloz",
+                "calmo",
+                "pesado"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 62,
+            "pergunta": "Qual é o antônimo de 'feliz'?",
+            "opcoes": [
+                "alegre",
+                "triste",
+                "sorridente",
+                "divertido"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 63,
+            "pergunta": "\"Ela é forte como um leão\" é:",
+            "opcoes": [
+                "Comparação",
+                "Metáfora",
+                "Ironia",
+                "Hipérbole"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 64,
+            "pergunta": "Qual a figura de linguagem em: 'O tempo voa'?",
+            "opcoes": [
+                "Metáfora",
+                "Hipérbole",
+                "Ironia",
+                "Eufemismo"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 65,
+            "pergunta": "\"Estou morrendo de sede\" é exemplo de:",
+            "opcoes": [
+                "Metáfora",
+                "Hipérbole",
+                "Comparação",
+                "Personificação"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "portugues"
+        },
+        {
+            "id": 66,
+            "pergunta": "Onde ocorre a fotossíntese?",
+            "opcoes": [
+                "Raízes",
+                "Folhas",
+                "Flores",
+                "Frutos"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 67,
+            "pergunta": "O que causa os terremotos?",
+            "opcoes": [
+                "Ventos",
+                "Chuvas",
+                "Placas tectônicas",
+                "Maremotos"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 68,
+            "pergunta": "Qual gás as plantas absorvem?",
+            "opcoes": [
+                "Oxigênio",
+                "Nitrogênio",
+                "Gás carbônico",
+                "Hélio"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 69,
+            "pergunta": "Qual metal é líquido na temperatura ambiente?",
+            "opcoes": [
+                "Ouro",
+                "Mercúrio",
+                "Ferro",
+                "Alumínio"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 70,
+            "pergunta": "Qual órgão é responsável pela digestão dos alimentos?",
+            "opcoes": [
+                "Coração",
+                "Pulmão",
+                "Estômago",
+                "Fígado"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 71,
+            "pergunta": "O que é o sistema respiratório responsável por fazer?",
+            "opcoes": [
+                "Bater o coração",
+                "Respirar",
+                "Mover os ossos",
+                "Circular o sangue"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "ciencias"
+        },
+        {
+            "id": 72,
+            "pergunta": "Qual deserto é o maior do mundo?",
+            "opcoes": [
+                "Saara",
+                "Atacama",
+                "Gobi",
+                "Antártico"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 73,
+            "pergunta": "Qual a principal vegetação da Amazônia?",
+            "opcoes": [
+                "Caatinga",
+                "Pampas",
+                "Floresta Tropical",
+                "Cerrado"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 74,
+            "pergunta": "O que é um bioma?",
+            "opcoes": [
+                "Tipo de rocha",
+                "Conjunto de ecossistemas",
+                "Espécie animal",
+                "Fenômeno climático"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 75,
+            "pergunta": "Qual montanha é a mais alta do mundo?",
+            "opcoes": [
+                "Pico da Neblina",
+                "Monte Everest",
+                "Kilimanjaro",
+                "Aconcágua"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 76,
+            "pergunta": "O que são placas tectônicas?",
+            "opcoes": [
+                "Tipos de rochas",
+                "Camadas da água",
+                "Partes da crosta terrestre",
+                "Animais marinhos"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "geografia"
+        },
+        {
+            "id": 77,
+            "pergunta": "Qual era o nome da primeira capital do Brasil?",
+            "opcoes": [
+                "Rio",
+                "Salvador",
+                "Recife",
+                "SP"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "historia"
+        },
+        {
+            "id": 78,
+            "pergunta": "O que foi a Lei Áurea?",
+            "opcoes": [
+                "Aboliu escravidão",
+                "Independência",
+                "Proclamou República",
+                "Novo imposto"
+            ],
+            "correta": 0,
+            "dificuldade": 2,
+            "disciplina": "historia"
+        },
+        {
+            "id": 79,
+            "pergunta": "Qual guerra o Brasil participou em 1942?",
+            "opcoes": [
+                "Primeira Guerra",
+                "Guerra do Paraguai",
+                "Segunda Guerra",
+                "Guerra Fria"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "historia"
+        },
+        {
+            "id": 80,
+            "pergunta": "O que aconteceu em 1822 no Brasil?",
+            "opcoes": [
+                "Abolição da escravidão",
+                "Descobrimento",
+                "Independência do Brasil",
+                "Proclamação da República"
+            ],
+            "correta": 2,
+            "dificuldade": 2,
+            "disciplina": "historia"
+        },
+        {
+            "id": 81,
+            "pergunta": "O que foi a Revolta da Chibata?",
+            "opcoes": [
+                "Revolta de estudantes",
+                "Revolta de marinheiros contra castigos",
+                "Revolta de escravos",
+                "Protesto contra impostos"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "historia"
+        },
+        {
+            "id": 82,
+            "pergunta": "Em que ano o homem pisou na Lua?",
+            "opcoes": [
+                "1965",
+                "1969",
+                "1972",
+                "1980"
+            ],
+            "correta": 1,
+            "dificuldade": 2,
+            "disciplina": "atualidades"
+        }
+    ]
+}
