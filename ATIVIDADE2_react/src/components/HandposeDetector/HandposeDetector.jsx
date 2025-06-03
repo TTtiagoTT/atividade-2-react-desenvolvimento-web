@@ -1,4 +1,3 @@
-// src/components/HandposeDetector/HandposeDetector.jsx
 import React, { useRef, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as handPoseDetection from '@tensorflow-models/hand-pose-detection';
@@ -67,17 +66,24 @@ function HandposeDetector({ onHandMove }) {
                 if (hands.length > 0) {
                     const hand = hands[0];
                     if (ctx) {
+                        // REMOVED: Drawing of red keypoints
+                        /*
                         hand.keypoints.forEach(keypoint => {
                             ctx.beginPath();
                             ctx.arc(keypoint.x, keypoint.y, 6, 0, 2 * Math.PI);
                             ctx.fillStyle = 'red';
                             ctx.fill();
                         });
+                        */
+
+                        // REMOVED: Drawing of blue indicator finger tip
+                        /*
                         const indicatorFingerTip = hand.keypoints[8];
                         ctx.beginPath();
                         ctx.arc(indicatorFingerTip.x, indicatorFingerTip.y, 10, 0, 2 * Math.PI);
                         ctx.fillStyle = 'blue';
                         ctx.fill();
+                        */
                     }
 
                     const indicator = hand.keypoints[8];
