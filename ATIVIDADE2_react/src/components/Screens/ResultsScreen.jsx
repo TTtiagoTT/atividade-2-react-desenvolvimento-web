@@ -1,78 +1,83 @@
 // src/components/Screens/ResultsScreen.jsx
 import React, { useRef, useEffect, useState } from 'react';
-// Certifique-se de que esta função está acessível.
-// Pode importá-la do App.jsx ou de um ficheiro utils.
-import { isCursorOverElement } from '../../App';
+import { isCursorOverElement } from '../../App'; // Ajuste o caminho se moveu a função
 
-function ResultsScreen({ score, onRestartGame, cursorPosition, timeDelay }) {
+function ResultsScreen({ 
+    score, 
+    onRestartGame, 
+    cursorPosition, 
+    timeDelay,
+    gameFeedback,         // Nova prop
+    isLoadingFeedback     // Nova prop
+}) {
     const restartButtonRef = useRef(null);
     const [isHoveringRestart, setIsHoveringRestart] = useState(false);
     const hoverTimeoutRef = useRef(null);
 
-    // Efeito 1: Atualiza o estado 'isHoveringRestart' baseado na posição do cursor
+    // Efeito para o estado de hover do botão Reiniciar
     useEffect(() => {
         if (!cursorPosition || !restartButtonRef.current) {
             if (isHoveringRestart) setIsHoveringRestart(false);
             return;
         }
-
-        const overRestart = isCursorOverElement(cursorPosition, restartButtonRef.current, 20); // Adicionada margem
-
+        const overRestart = isCursorOverElement(cursorPosition, restartButtonRef.current, 20);
         if (overRestart !== isHoveringRestart) {
-            // Log para quando o estado de hover muda
-            console.log(`ResultsScreen: Cursor ${overRestart ? 'ENTROU' : 'SAIU'} da área do botão Reiniciar.`);
             setIsHoveringRestart(overRestart);
         }
+    }, [cursorPosition, isHoveringRestart]);
 
-        // Logs para depuração contínua da posição e do retângulo do botão
-        // Remova ou comente após a depuração para não poluir a consola
-        const buttonRect = restartButtonRef.current.getBoundingClientRect();
-        // console.log("ResultsScreen - Cursor:", cursorPosition, "Botão Rect:", buttonRect, "isOver:", overRestart);
-
-
-    }, [cursorPosition, isHoveringRestart]); // Depende da posição do cursor e do estado de hover atual
-
-    // Efeito 2: Lida com o timer de ação quando 'isHoveringRestart' muda
+    // Efeito para a ação do botão Reiniciar
     useEffect(() => {
         if (isHoveringRestart) {
             console.log(`ResultsScreen: Hover ATIVADO no botão Reiniciar. A iniciar timer de ${timeDelay}ms.`);
-            if (hoverTimeoutRef.current) { // Limpa qualquer timer anterior (segurança)
-                clearTimeout(hoverTimeoutRef.current);
-            }
+            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
             hoverTimeoutRef.current = setTimeout(() => {
-                console.log("ResultsScreen: Timer CONCLUÍDO para Reiniciar! A chamar onRestartGame.");
-                onRestartGame();
-                setIsHoveringRestart(false); // Desativa o hover após a ação
-                hoverTimeoutRef.current = null;
+                if (isHoveringRestart) { // Verifica novamente se ainda está em hover
+                    console.log("ResultsScreen: Timer CONCLUÍDO para Reiniciar! A chamar onRestartGame.");
+                    onRestartGame();
+                    setIsHoveringRestart(false);
+                    hoverTimeoutRef.current = null;
+                }
             }, timeDelay);
         } else {
-            // Se não está em hover, garante que qualquer timer pendente seja limpo
             if (hoverTimeoutRef.current) {
-                console.log("ResultsScreen: Hover DESATIVADO no botão Reiniciar. A limpar timer existente.");
+                console.log("ResultsScreen: Hover DESATIVADO no botão Reiniciar. A limpar timer.");
                 clearTimeout(hoverTimeoutRef.current);
                 hoverTimeoutRef.current = null;
             }
         }
-
-        // Função de limpeza para este efeito
         return () => {
-            if (hoverTimeoutRef.current) {
-                console.log("ResultsScreen: Limpando timer (cleanup do useEffect).");
-                clearTimeout(hoverTimeoutRef.current);
-                hoverTimeoutRef.current = null;
-            }
+            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
         };
     }, [isHoveringRestart, timeDelay, onRestartGame]);
 
     return (
-        <div id="results-screen" style={{ display: 'flex' }}>
-            <div id="results-content">
+        <div id="results-screen" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <div id="results-content" style={{background: 'white', padding: '2em', borderRadius: '12px', textAlign: 'center', color: '#333'}}>
                 <h2>Resultados Finais</h2>
-                <p id="final-score">Pontuação: {score}</p>
+                <p id="final-score" style={{fontSize: '1.5em', marginBottom: '1.5em'}}>Pontuação: {score}</p>
+                
+                {/* Secção para o Feedback da IA */}
+                <div id="ai-feedback-section" style={{ marginTop: '20px', marginBottom: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '8px', background: '#f9f9f9' }}>
+                    <h3 style={{marginTop: 0, color: '#555'}}>Feedback Personalizado:</h3>
+                    {isLoadingFeedback && <p>A gerar o seu feedback personalizado, aguarde...</p>}
+                    {!isLoadingFeedback && gameFeedback && <p style={{textAlign: 'left', whiteSpace: 'pre-wrap'}}>{gameFeedback}</p>}
+                    {!isLoadingFeedback && !gameFeedback && <p>Não foi possível carregar o feedback desta vez.</p>}
+                </div>
+
                 <button
                     ref={restartButtonRef}
                     id="btn-restart" // O seu CSS usa este ID para o hover visual
                     className={isHoveringRestart ? 'hover' : ''} // Aplica a classe .hover do seu CSS
+                    style={{ // Estilo básico, pode ser ajustado pelo seu CSS
+                        background: '#12c2e9',
+                        color: 'white',
+                        fontSize: '1.2em',
+                        padding: '0.8em 1.5em',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer'
+                    }}
                 >
                     Reiniciar
                 </button>
